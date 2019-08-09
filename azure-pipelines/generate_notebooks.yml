@@ -23,6 +23,7 @@ steps:
     echo "##vso[task.prependpath]$CONDA/bin"
     sudo chown -R $USER $CONDA
     conda update -y conda
-  displayName: updating conda and activating
+    conda env create -f code-comparison1/code-comparison1-env.yml
+  displayName: updating conda and installing environment
 
 
