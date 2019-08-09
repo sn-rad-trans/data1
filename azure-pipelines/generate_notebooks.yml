@@ -11,11 +11,11 @@ pool:
 
 steps:
 - script: |
-  git clone https://github.com/sn-rad-trans/code-comparison1.git
-  mkdir data1
-  mv toy01 toy06 ddc10 ddc25 data1
-  mv data1 code-comparison1
-  ls *
+    git clone https://github.com/sn-rad-trans/code-comparison1.git
+    mkdir data1
+    mv toy01 toy06 ddc10 ddc25 data1
+    mv data1 code-comparison1
+    ls *
   displayName: 'Prepare the data'
 
 - script: |
