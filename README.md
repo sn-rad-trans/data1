@@ -10,3 +10,5 @@ easily make comparison plots with the following instructions.
 ./plot_XXX toy01 lbol
 
 ```
+
+[![Build Status](https://dev.azure.com/sn-rad-trans/data1/_apis/build/status/sn-rad-trans.data1?branchName=master)](https://dev.azure.com/sn-rad-trans/data1/_build/latest?definitionId=2&branchName=master)
