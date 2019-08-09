@@ -29,6 +29,6 @@ steps:
     source activate code-comparison1
     hash -r
     cd code-comparison1
-    jupyter-nbconvert --execute generate_web_model_comparison.ipynb
+    jupyter nbconvert --ExecutePreprocessor.timeout=600 --execute generate_web_model_comparison.ipynb
   displayName: Updating notebooks and html
 
