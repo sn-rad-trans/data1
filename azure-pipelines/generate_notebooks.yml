@@ -18,7 +18,6 @@ steps:
     ls *
   displayName: 'Prepare the data'
 
-steps:
 - bash: |
     echo "##vso[task.prependpath]$CONDA/bin"
     sudo chown -R $USER $CONDA
