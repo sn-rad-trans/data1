@@ -25,4 +25,10 @@ steps:
     conda env create -f code-comparison1/code-comparison1-env.yml
   displayName: updating conda and installing environment
 
+- bash: |
+    source activate code-comparison1
+    hash -r
+    cd code-comparison1
+    jupyter-nbconvert --execute generate_web_model_comparison.ipynb
+  displayName: Updating notebooks and html
 
