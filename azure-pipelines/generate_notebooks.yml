@@ -1,0 +1,34 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    git clone https://github.com/sn-rad-trans/code-comparison1.git
+    mkdir data1
+    mv toy01 toy06 ddc10 ddc25 data1
+    mv data1 code-comparison1
+    ls *
+  displayName: 'Prepare the data'
+
+- bash: |
+    echo "##vso[task.prependpath]$CONDA/bin"
+    sudo chown -R $USER $CONDA
+    conda update -y conda
+    conda env create -f code-comparison1/code-comparison1-env.yml
+  displayName: updating conda and installing environment
+
+- bash: |
+    source activate code-comparison1
+    hash -r
+    cd code-comparison1
+    jupyter-nbconvert --execute generate_web_model_comparison.ipynb
+  displayName: Updating notebooks and html
+
