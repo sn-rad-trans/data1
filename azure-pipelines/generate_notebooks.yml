@@ -21,7 +21,7 @@ steps:
     #sshPassphrase: # Optional
     sshKeySecureFile: 'id_rsa_sn_rad_trans'
 - script: |
-    git clone https://github.com/sn-rad-trans/code-comparison1.git
+    git clone git@github.com:sn-rad-trans/code-comparison1.git
     git clone git@github.com:sn-rad-trans/sn-rad-trans.github.io.git
     mkdir data1
     mv toy01 toy06 ddc10 ddc25 data1
@@ -41,6 +41,11 @@ steps:
     hash -r
     cd code-comparison1
     jupyter nbconvert --ExecutePreprocessor.timeout=600 --execute generate_web_model_comparison.ipynb
+    git config --local user.name "Azure Pipelines"
+    git config --local user.email "azuredevops@microsoft.com"
+    git commit -a -m 'update by pipeline'
+    git push origin master
+
   displayName: Updating notebooks and html
 
 - bash: |
@@ -49,6 +54,7 @@ steps:
     cd sn-rad-trans.github.io
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
-
-    git commit -a 
+    git commit -a -m 'update by pipeline'
+    git push origin master
+    
   displayName: Pushing to the webpage
