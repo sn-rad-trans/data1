@@ -13,14 +13,14 @@ steps:
 
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: 'id_rsa_sn_rad_trans'
+    secureFile: 'id_rsa_sn_rad_trans_bot'
 
 - task: InstallSSHKey@0
   inputs:
     knownHostsEntry: $(gh_host)
     sshPublicKey: $(public_key)
     #sshPassphrase: # Optional
-    sshKeySecureFile: 'id_rsa_sn_rad_trans'
+    sshKeySecureFile: 'id_rsa_sn_rad_trans_bot'
 - script: |
     git clone git@github.com:sn-rad-trans/code-comparison1.git
     git clone git@github.com:sn-rad-trans/sn-rad-trans.github.io.git
