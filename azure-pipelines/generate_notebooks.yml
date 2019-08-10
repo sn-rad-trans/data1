@@ -10,8 +10,19 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: DownloadSecureFile@1
+    inputs: 
+      secureFile: 'id_rsa_sn_rad_trans'
+
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: $(gh_host)
+    sshPublicKey: $(public_key)
+    #sshPassphrase: # Optional
+    sshKeySecureFile: 'id_rsa_sn_rad_trans'
 - script: |
     git clone https://github.com/sn-rad-trans/code-comparison1.git
+    git clone git@github.com:sn-rad-trans/sn-rad-trans.github.io.git
     mkdir data1
     mv toy01 toy06 ddc10 ddc25 data1
     mv data1 code-comparison1
@@ -32,3 +43,12 @@ steps:
     jupyter nbconvert --ExecutePreprocessor.timeout=600 --execute generate_web_model_comparison.ipynb
   displayName: Updating notebooks and html
 
+- bash: |
+    source activate code-comparison1
+    hash -r
+    cd sn-rad-trans.github.io
+    git config --local user.name "Azure Pipelines"
+    git config --local user.email "azuredevops@microsoft.com"
+
+    git commit -a 
+  displayName: Pushing to the webpage
