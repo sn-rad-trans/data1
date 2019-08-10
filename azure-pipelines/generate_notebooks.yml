@@ -10,9 +10,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+
 - task: DownloadSecureFile@1
-    inputs: 
-      secureFile: 'id_rsa_sn_rad_trans'
+  inputs:
+    secureFile: 'id_rsa_sn_rad_trans'
 
 - task: InstallSSHKey@0
   inputs:
