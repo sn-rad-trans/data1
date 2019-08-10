@@ -44,6 +44,8 @@ steps:
     jupyter nbconvert --ExecutePreprocessor.timeout=600 --execute --allow-errors generate_web_model_comparison.ipynb
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
+    git commit -a -m 'update by pipeline'
+    git push -f origin master
 
   displayName: Updating notebooks and html
 
