@@ -54,6 +54,7 @@ steps:
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
     git commit -a -m 'update by pipeline'
+    git pull origin master
     git push origin master
     
   displayName: Pushing to the webpage
