@@ -27,3 +27,6 @@ Follow the steps below if you would like to update the data yourself using githu
 8. `git status` -- Shows you what you have changed in the repo.  
 9. `git add <all new files>` -- You need to run `git add` with each new file listed under the "Untracked Files" category of the `git status` report.
 10. `git commit -am "<Short, descriptive update message.>"` -- This commit all changes you have made.  Please replace <Short, descriptive update message> with something useful like: "Updated Stella files."
+11. `git push --set-upstream origin data_update_stella` -- This will push your changed branch to your forked repo.
+12. Navigate to your forked version of the repo. Under the "Branch" dropdown menu select your new branch "data_update"
+13. Click "New Pull Request" button, add a brief description of the changes you have made, and click "Create Pull Request" -- This will notify the team managing the original repo that you have made changes that are ready to merge.
