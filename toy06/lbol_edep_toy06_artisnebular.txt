@@ -1,4 +1,4 @@
-#NTIMES 50
+#NTIMES: 50
 #time[d] Lbol[erg/s] Edep[erg/s] 
 199.16 9.77e+40 9.62e+40
 202.03 9.40e+40 9.24e+40
