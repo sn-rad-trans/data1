@@ -1,0 +1,13 @@
+#Magnitudes for spectra_toy01_sumo calculated by wsynphot
+#with vega calibration file: https://archive.stsci.edu/hlsps/reference-atlases/cdbs/calspec/alpha_lyr_stis_003.fits 
+#and with scipy 1D interpolation kind='cubic'.
+#U,B,V,R,I are Generic Bessell filters and J, H, K are 2MASS filters, taken from http://svo2.cab.inta-csic.es/theory/fps/index.php 
+#
+#NTIMES: 5
+#NBANDS: 8
+#time[d] U B V R I J H K
+1.000000e+02 -13.515973 -14.443925 -14.326338 -14.436545 -14.736583 -13.293981 -14.464165 -13.989022
+1.500000e+02 -11.987131 -13.432574 -13.321691 -13.161499 -13.628068 -11.988709 -13.211675 -12.818840
+2.000000e+02 -10.309188 -12.189900 -12.461149 -12.519675 -13.306245 -11.586239 -12.501606 -12.024558
+3.000000e+02 -8.504716 -10.483767 -10.886845 -11.009945 -11.973392 -11.234987 -11.880054 -10.877821
+4.000000e+02 -7.043920 -8.720194 -9.175397 -9.504811 -10.606439 -10.968504 -11.618724 -9.451118

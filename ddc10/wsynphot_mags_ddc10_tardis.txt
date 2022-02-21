@@ -1,0 +1,12 @@
+#Magnitudes for spectra_ddc10_tardis calculated by wsynphot
+#with vega calibration file: https://archive.stsci.edu/hlsps/reference-atlases/cdbs/calspec/alpha_lyr_stis_003.fits 
+#and with scipy 1D interpolation kind='cubic'.
+#U,B,V,R,I are Generic Bessell filters and J, H, K are 2MASS filters, taken from http://svo2.cab.inta-csic.es/theory/fps/index.php 
+#
+#NTIMES: 4
+#NBANDS: 8
+#time[d] U B V R I J H K
+5.000000e+00 -17.559801 -16.769019 -16.840967 -17.180446 -17.247896 -17.306492 -17.285735 -13.470875
+1.000000e+01 -19.212082 -18.389558 -18.424721 -18.726465 -18.789043 -18.736122 -18.741863 -14.849501
+1.500000e+01 -19.542117 -18.920518 -19.007227 -19.248533 -19.162573 -18.998123 -18.927274 -15.080303
+2.000000e+01 -19.526375 -18.995549 -19.108474 -19.256890 -19.159582 -18.967749 -18.861035 -15.012553
