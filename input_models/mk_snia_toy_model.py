@@ -31,10 +31,10 @@ relative fraction of O is set using --xfraco). The ejecta must contain
 some 56Ni and IMEs, but does not necessarily have to include stable
 IGEs or unburnt C/O.
 
-       |             ||       ||       ||             |
-       | stable IGEs || 56Ni  || IMEs  || unburnt C/O |
-       | (optional)  || (+Ti) || (+Ti) || (optional)  |
-mass = 0.............................................mtot
+       |                ||       ||       ||             |
+       | stable Fe(+Ni) || 56Ni  || IMEs  || unburnt C/O |
+       | (optional)     || (+Ti) || (+Ti) || (optional)  |
+mass = 0................................................mtot
 
 The abundance profiles are connected using an analytical function
 (--transprof) over a given mass range (--dmige for stable IGE -> 56Ni
@@ -151,6 +151,11 @@ Revision history
               o added --highni and --lowni options to generate two toy models discussed during workshop
               o plot mass profile m(v) in separate plot (useful?)
 
+07 Mar 2022 - revised version (SB)
+              o removed duplicate Ti mass fraction column when --xfracti is set
+              o limit choices of IMEs to list of allowed IMEs (IME_ALLOWED)
+              o added notes on mass fractions in output file
+
 Author contact
 --------------
 Stéphane Blondin, stephane.blondin@lam.fr
@@ -162,7 +167,7 @@ import re
 import numpy as np
 
 ### version number
-VERSION = '2018-06-22'
+VERSION = '2022-03-07'
 
 ### ensure Python2 (2.6 or 2.7) and Python3 compatibility
 if sys.version_info.major == 2:
@@ -225,8 +230,9 @@ FOUT_INIT = 'snia_toy.dat'   # output file name
 # M(Si) / M(Ca+S+Si+Mg) ~ 0.542
 # M(Mg) / M(Ca+S+Si+Mg) ~ 0.020
 #
-IME_INIT      = 'ca,s,si,mg'              # comma-separated list of IMEs to include
-XFRACIME_INIT = '0.087,0.351,0.542,0.020' # comma-separated list of relative IME fractions
+IME_ALLOWED   = ['na','mg','al','si','p','s','cl','ar','k','ca'] # IMEs should be chosen from this list
+IME_INIT      = 'ca,s,si,mg'                                     # comma-separated list of IMEs to include
+XFRACIME_INIT = '0.087,0.351,0.542,0.020'                        # comma-separated list of relative IME fractions
 
 ###############################################################################
 
@@ -424,8 +430,8 @@ if __name__ == '__main__':
     imes = args.ime.split(',')
     nime = len(imes)
     for ii, ime in enumerate(imes):
-        if ime not in IME_INIT:
-            sys.exit("ERROR - IME {:s} not in default IME_INIT: {:s}".format(ime, IME_INIT))
+        if ime not in IME_ALLOWED:
+            sys.exit("ERROR - IME {:s} not in list of allowed IMEs (IME_ALLOWED): {:s}".format(ime, ','.join(IME_ALLOWED)))
 
     if nime == 1:
         xfracimestr = ['1.0']
@@ -980,14 +986,13 @@ if __name__ == '__main__':
             f.write('# M(Ti) = {:.4e} Msun ({:.4e} requested) in 56Ni and IME zones\n'.format(np.sum(dmass*xti), mti))
         f.write('# M(unburnt C/O) = {:.4e} Msun with relative (O, C) fractions = {:.2f}, {:.2f}\n'.format(np.sum(dmass*xunbco), args.xfraco, 1.0-args.xfraco))
         f.write('# dM(IGE,56Ni,IME) = {:.2f}, {:.2f}, {:.2f} Msun'.format(dmige, dmni56, dmime))
-        f.write('; transition profile = {:s}\n'.format(args.transprof))
-        f.write('# ni56 weighted, average column density={:,.2e} g cm^-2 s^2'.format(Sig_tot_t2))
-        f.write('; t0_gamma={:.2f} day\n'.format(t0_gamma/DAY2SEC) )
-        
+        f.write('; transition profile = {:s}'.format(args.transprof))
         if args.transprof == 'invexpon':
             f.write(' (with scale factor = {:.2e})\n'.format(args.transscl))
         else:
             f.write('\n')
+        f.write('# 56Ni-weighted average column density={:.2e} g cm^-2 s^2'.format(Sig_tot_t2))
+        f.write('; t0_gamma={:.2f} day\n'.format(t0_gamma/DAY2SEC) )
         f.write('#\n')
         f.write('# COLUMNS:\n')
         f.write('#\n')
@@ -995,21 +1000,32 @@ if __name__ == '__main__':
         f.write('# (2) velocity at zone center [km/s]\n')
         f.write('# (3) zone mass [Msun]\n')
         f.write('# (4) Lagrangian mass coordinate (corresponding to outer zone boundary) [Msun]\n')
-        f.write('# (5) IGE mass fraction at t=0\n')
+        if np.sum(xni_stable) > 0.0:
+            f.write('# (5) stable IGE (Fe+Ni) mass fraction at t=0\n')
+        else:
+            f.write('# (5) stable IGE (Fe) mass fraction at t=0\n')
         f.write('# (6) 56Ni mass fraction at t=0\n')
         f.write('# (7) IME mass fraction\n')
         f.write('# (8) Ti mass fraction\n')
-        f.write('# (9) unburnt CO mass fraction\n')
+        f.write('# (9) unburnt C+O mass fraction\n')
         f.write('# (10) radius at zone center [cm] = velocity * time_since_explosion (homologous expansion)\n')
         f.write('# (11) mean density over zone [g/cm^3] (*not* density at zone center)\n')
         f.write('# (12) temperature [K]\n')
-        if (xfracti > 0.0):
-            nxfraccols = nime + 19
-        else:
-            nxfraccols = nime + 18
+        # if (xfracti > 0.0):
+        #     nxfraccols = nime + 19
+        # else:
+        nxfraccols = nime + 18
         f.write('# (13)-({:d}) mass fractions\n'.format(nxfraccols))
         f.write('#\n')
-        f.write('# NOTES ON MASS FRACTIONS: (14) X_Ni includes X_56Ni; (15) X_Co = X_56Co; (16) X_Fe includes 56Fe from 56Co decay\n')
+        f.write('# NOTES ON MASS FRACTIONS:\n')
+        f.write('#\n')
+        f.write('# !!! All mass fractions are given at tend = {:.2f} DAYS !!!\n'.format(tend))
+        f.write('# (apart from IGE & 56Ni mass fractions in columns (5) and (6) which are at t=0)\n')
+        f.write('#\n')
+        f.write('# (8) X_Ti only appears in this column (no duplicate entry in columns (13)-({:d}))\n'.format(nxfraccols))
+        f.write('# (14) X_Ni includes X_56Ni\n')
+        f.write('# (15) X_Co = X_56Co\n')
+        f.write('# (16) X_Fe includes 56Fe from 56Co decay\n')
         f.write('#\n')
         # Time-independent variables:
         f.write('{:4s} {:10s} {:10s} {:10s} {:10s} {:10s} {:10s} {:10s} {:10s}'.format('#idx','vel[km/s]','dmass[Msun]','mass[Msun]','X_IGE0','X_56Ni0','X_IME','X_Ti','X_CO'))
@@ -1018,8 +1034,8 @@ if __name__ == '__main__':
         # Time-dependent abundances:
         f.write(' {:10s} {:10s} {:10s} {:10s}'.format('X_56Ni','X_Ni','X_Co','X_Fe'))
         # Time-independent abundances:
-        if (xfracti > 0.0):
-            f.write(' {:10s}'.format('X_Ti'))
+        # if (xfracti > 0.0):
+        #     f.write(' {:10s}'.format('X_Ti'))
         for ime in imes:
             f.write(' {:10s}'.format('X_'+ime.capitalize()))
         f.write(' {:10s} {:10s}'.format('X_O','X_C'))
@@ -1029,9 +1045,9 @@ if __name__ == '__main__':
         f.write(' {:10s} {:10s} {:10s}'.format('(10)','(11)','(12)'))
         f.write(' {:10s} {:10s} {:10s} {:10s}'.format('(13)','(14)','(15)','(16)'))
         idxcol = 16
-        if (xfracti > 0.0):
-            idxcol += 1
-            f.write(' {:10s}'.format('('+str(idxcol)+')'))
+        # if (xfracti > 0.0):
+        #     idxcol += 1
+        #     f.write(' {:10s}'.format('('+str(idxcol)+')'))
         for ime in imes:
             idxcol += 1
             f.write(' {:10s}'.format('('+str(idxcol)+')'))
@@ -1044,8 +1060,8 @@ if __name__ == '__main__':
             f.write(' {:.4e} {:.4e} {:.4e} {:.4e} {:.4e}'.format(xige[i], xni56_old[i], xime[i], xti[i], xunbco[i]))
             f.write(' {:.4e} {:.4e} {:.4e}'.format(rad[i], dens[i], temp[i]))
             f.write(' {:.4e} {:.4e} {:.4e} {:.4e}'.format(xni56[i], xni[i], xco[i], xfe[i]))
-            if (xfracti > 0.0):
-                f.write(' {:.4e}'.format(xti[i]))
+            # if (xfracti > 0.0):
+            #     f.write(' {:.4e}'.format(xti[i]))
             for ime in imes:
                 f.write(' {:.4e}'.format(ximeindiv[ime][i]))
             f.write(' {:.4e} {:.4e}'.format(xo[i], xc[i]))

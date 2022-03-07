@@ -1,4 +1,4 @@
-### SNIa toy model generated with mk_snia_toy_model.py version 2018-06-22
+### SNIa toy model generated with mk_snia_toy_model.py version 2022-03-07
 #
 ## Adopted constants:
 #
@@ -20,8 +20,7 @@
 # M(IME) = 8.9995e-01 Msun (9.0000e-01 requested); IMEs = Ca, S, Si with relative fractions = 0.1, 0.35, 0.55
 # M(unburnt C/O) = 0.0000e+00 Msun with relative (O, C) fractions = 0.50, 0.50
 # dM(IGE,56Ni,IME) = 0.00, 0.20, 0.00 Msun; transition profile = cosine
-# ni56 weighted, average column density=7.15e+14 g cm^-2 s^2; t0_gamma=48.93 day
-
+# 56Ni-weighted average column density=7.15e+14 g cm^-2 s^2; t0_gamma=48.93 day
 #
 # COLUMNS:
 #
@@ -29,17 +28,25 @@
 # (2) velocity at zone center [km/s]
 # (3) zone mass [Msun]
 # (4) Lagrangian mass coordinate (corresponding to outer zone boundary) [Msun]
-# (5) IGE mass fraction at t=0
+# (5) stable IGE (Fe) mass fraction at t=0
 # (6) 56Ni mass fraction at t=0
 # (7) IME mass fraction
 # (8) Ti mass fraction
-# (9) unburnt CO mass fraction
+# (9) unburnt C+O mass fraction
 # (10) radius at zone center [cm] = velocity * time_since_explosion (homologous expansion)
 # (11) mean density over zone [g/cm^3] (*not* density at zone center)
 # (12) temperature [K]
 # (13)-(21) mass fractions
 #
-# NOTES ON MASS FRACTIONS: (14) X_Ni includes X_56Ni; (15) X_Co = X_56Co; (16) X_Fe includes 56Fe from 56Co decay
+# NOTES ON MASS FRACTIONS:
+#
+# !!! All mass fractions are given at tend = 2.00 DAYS !!!
+# (apart from IGE & 56Ni mass fractions in columns (5) and (6) which are at t=0)
+#
+# (8) X_Ti only appears in this column (no duplicate entry in columns (13)-(21))
+# (14) X_Ni includes X_56Ni
+# (15) X_Co = X_56Co
+# (16) X_Fe includes 56Fe from 56Co decay
 #
 #idx vel[km/s]  dmass[Msun] mass[Msun] X_IGE0     X_56Ni0    X_IME      X_Ti       X_CO       rad[cm]    dens[gcc]  temp[K]    X_56Ni     X_Ni       X_Co       X_Fe       X_Ca       X_S        X_Si       X_O        X_C       
 #(1) (2)        (3)        (4)        (5)        (6)        (7)        (8)        (9)        (10)       (11)       (12)       (13)       (14)       (15)       (16)       (17)       (18)       (19)       (20)       (21)      
