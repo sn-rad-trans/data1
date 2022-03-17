@@ -829,6 +829,12 @@ etc.
             vel.append(veltmp)
             ionfrac.append(ionfractmp)
 
+        # check values
+        if np.sum(np.concatenate(ionfrac).ravel()) == 0.0:
+            print('ERROR - ionization fraction = 0 everywhere for element: {:s}'.format(elem))
+            print(' ===> only submit ionfrac_*.txt files for elements included in the calculation')
+            sys.exit(read_ionfrac.__doc__)
+            
     # output
     out = {}
     out['elem'] = elem
@@ -1156,10 +1162,14 @@ if __name__ == '__main__':
     parser.add_argument('--noplot', action='store_true', help='skip plotting (useful, e.g., in combination with --checkformat')
     args = parser.parse_args()
 
-    # list of files with format errors
-    if args.checkformat:
-        files_with_errors = []
-    
+    # list of files with errors
+    files_with_errors = []
+
+    # prepare for plotting
+    if not args.noplot:
+        plt.ion()
+        fig = plt.figure()
+        
     # loop over files
     for filename in args.filename:
         
@@ -1275,10 +1285,9 @@ if __name__ == '__main__':
         else:
             sys.exit('ERROR - unknown file type: ' + basename)
 
-        # skip plotting if file has wrong formatting and --checkformat is set
-        if args.checkformat:
-            if filename in files_with_errors:
-                continue
+        # skip plotting if file contains errors
+        if filename in files_with_errors:
+            continue
 
         # plot
         if not args.noplot:
@@ -1300,8 +1309,6 @@ if __name__ == '__main__':
             code = tmpstr[tmpstr.index('_')+1:]
         
             # plot
-            plt.ion()
-            fig = plt.figure()
             ax = fig.add_subplot(111)
             ax.set_xlabel(xtit)
             ax.set_ylabel(ytit)
@@ -1321,23 +1328,22 @@ if __name__ == '__main__':
                 plt.gca().invert_yaxis()
             ax.legend()
             plt.draw()
-            zzz = input("===> Hit <return> to quit ")
+            zzz = input("===> Press <return> to quit ")
             plt.clf()
 
     # report files with errors
-    if args.checkformat:
-        if len(files_with_errors) > 0:
-            print()
-            print('#############################')
-            print('# !!! Files with errors !!! #')
-            print('#############################')
-            print()
-            for f in files_with_errors:
-                print(f)
-            print()
-        else:
-            print()
-            print('##########################################')
-            print('# Congratulations! No files with errors! #')
-            print('##########################################')
-            print()
+    if len(files_with_errors) > 0:
+        print()
+        print('#############################')
+        print('# !!! Files with errors !!! #')
+        print('#############################')
+        print()
+        for f in files_with_errors:
+            print(f)
+        print()
+    else:
+        print()
+        print('##########################################')
+        print('# Congratulations! No files with errors! #')
+        print('##########################################')
+        print()
