@@ -1341,7 +1341,7 @@ if __name__ == '__main__':
         for f in files_with_errors:
             print(f)
         print()
-    else:
+    elif args.checkformat:
         print()
         print('##########################################')
         print('# Congratulations! No files with errors! #')
