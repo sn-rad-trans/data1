@@ -21,7 +21,7 @@ if sys.version_info.major == 2:
     input = raw_input # input() to mean raw_input() when running Python2
 
 ### constants
-MSUN = 1.989e+33  # solar mass (g)
+MSUN = 1.989e+33     # solar mass (g)
 
 ###############################################################################
 
@@ -40,7 +40,7 @@ def read_snia_toy_model(file):
             line = f.readline()
             if 'nzones' in line:
                 nzones = int(line.split()[3])
-            elif 'tend' in line:
+            elif 'time at which' in line:
                 time = float(line.split()[-2])
             elif 'IMEs' in line:
                 idx0 = line.index('IMEs =') + 7
@@ -107,8 +107,14 @@ def read_snia_toy_model(file):
 def read_ddc_model(file):
 
     '''read in DDC_*d file
+
+    UPDATE 2022-03-17: mass fractions at t=t0 are no longer present in input files
+                       (but we compute 56Ni mass fraction at t=0)
     '''
 
+    THALF_56NI = 6.0749  # 56Ni->56Co decay half-life (days) used in DDC model runs
+    decay_const_ni56 = np.log(2) / THALF_56NI
+    
     print('INFO - reading file ' + file)
 
     with open(file, 'r') as f:
@@ -119,8 +125,8 @@ def read_ddc_model(file):
             line = f.readline()
             if 'TIME' in line:
                 time = float(line.split()[-2])
-            elif 's PAST EXPLOSION' in line:
-                t0 = float(line.split()[4])
+            # elif 's PAST EXPLOSION' in line:
+            #     t0 = float(line.split()[4])
             elif 'elemental' in line:
                 idx_elem = line.split()[1][1:-1]
                 idxelem0 = int(idx_elem[:idx_elem.index(')')]) - 1
@@ -129,14 +135,14 @@ def read_ddc_model(file):
                 idx_iso = line.split()[1][1:-1]
                 idxiso0 = int(idx_iso[:idx_iso.index(')')]) - 1
                 idxiso1 = int(idx_iso[idx_iso.index('(')+1:])
-            elif 'isotopic' in line and 'seconds since explosion' in line:
-                idx_iso = line.split()[1][1:-1]
-                idxiso00 = int(idx_iso[:idx_iso.index(')')]) - 1
-                idxiso01 = int(idx_iso[idx_iso.index('(')+1:])
+            # elif 'isotopic' in line and 'seconds since explosion' in line:
+            #     idx_iso = line.split()[1][1:-1]
+            #     idxiso00 = int(idx_iso[:idx_iso.index(')')]) - 1
+            #     idxiso01 = int(idx_iso[idx_iso.index('(')+1:])
             elif '#vel[km/s]' in line:
                 elems = line.split()[idxelem0:idxelem1]
                 isos = line.split()[idxiso0:idxiso1]
-                iso0s = line.split()[idxiso00:idxiso01]
+                # iso0s = line.split()[idxiso00:idxiso01]
                 line = f.readline()
                 okhdr = 1
 
@@ -149,13 +155,13 @@ def read_ddc_model(file):
         temp = []
         xelem = {}
         xiso = {}
-        xiso0 = {}
+        # xiso0 = {}
         for elem in elems:
             xelem[elem] = []
         for iso in isos:
             xiso[iso] = []
-        for iso in iso0s:
-            xiso0[iso] = []
+        # for iso in iso0s:
+        #     xiso0[iso] = []
         
         ### read numerical data
         while 1:
@@ -175,16 +181,16 @@ def read_ddc_model(file):
                     xelem[elem].append(float(split_line[idxelem0 + ielem]))
                 for iiso, iso in enumerate(isos):
                     xiso[iso].append(float(split_line[idxiso0 + iiso]))
-                for iiso, iso in enumerate(iso0s):
-                    xiso0[iso].append(float(split_line[idxiso00 + iiso]))
+                # for iiso, iso in enumerate(iso0s):
+                #     xiso0[iso].append(float(split_line[idxiso00 + iiso]))
 
     # output
     out = {}
     out['time'] = time
-    out['t0'] = t0
+    # out['t0'] = t0
     out['elem'] = elems
     out['iso'] = isos
-    out['iso_0'] = iso0s
+    # out['iso_0'] = iso0s
     out['vel'] = np.array(vel)
     out['rad'] = np.array(rad)
     out['dvol'] = np.array(dvol)
@@ -195,10 +201,15 @@ def read_ddc_model(file):
         out[elem] = np.array(xelem[elem])
     for iso in isos:
         out[iso] = np.array(xiso[iso])
-    for iso in iso0s:
-        out[iso] = np.array(xiso0[iso])
+        if iso == 'ni56':
+            # 56Ni at t=0 inferred from 56Ni(t)
+            # note that decay_const_ni56 is in /days and time is in days
+            out['ni56_0'] = out['ni56'] * np.exp(decay_const_ni56 * time)
+    # for iso in iso0s:
+    #     out[iso] = np.array(xiso0[iso])
     
-    out['units'] = 'time: days\nt0: seconds\nvel: km/s\nrad: cm\ndvol: cm^3\ndens: g/cm^3\ndmass: g\ntemp: K'
+    # out['units'] = 'time: days\nt0: seconds\nvel: km/s\nrad: cm\ndvol: cm^3\ndens: g/cm^3\ndmass: g\ntemp: K'
+    out['units'] = 'time: days\nvel: km/s\nrad: cm\ndvol: cm^3\ndens: g/cm^3\ndmass: g\ntemp: K'
 
     return out
 
@@ -211,13 +222,13 @@ if __name__ == '__main__':
 
     # parse command-line options
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter) 
-    parser.add_argument('--path2data', default='', type=str, help='path to directory containing the model files')
+    parser.add_argument('--path2data', default='.', type=str, help='path to directory containing the model files')
     args = parser.parse_args()
 
-    toy01 = read_snia_toy_model(args.path2data + 'snia_toy01.dat')
-    toy06 = read_snia_toy_model(args.path2data + 'snia_toy06.dat')
-    ddc10 = read_ddc_model(args.path2data + 'DDC10_0.976d')
-    ddc25 = read_ddc_model(args.path2data + 'DDC25_1.300d')
+    toy01 = read_snia_toy_model(args.path2data +'/' + 'snia_toy01.dat')
+    toy06 = read_snia_toy_model(args.path2data +'/' + 'snia_toy06.dat')
+    ddc10 = read_ddc_model(args.path2data +'/' + 'DDC10_0.976d')
+    ddc25 = read_ddc_model(args.path2data +'/' + 'DDC25_1.300d')
     model_dicts = {'toy01':toy01, 'toy06':toy06, 'DDC10':ddc10, 'DDC25':ddc25}
 
     
