@@ -1,5 +1,5 @@
-#time[d]   Lbol[erg/s]   Edep[erg/s]
 #NTIMES:           33
+#time[d]   Lbol[erg/s]   Edep[erg/s]
  1.00000E-01 7.01455E+38   7.438E+42
  5.00000E-01 2.46604E+38   7.175E+42
  1.00000E+00 3.30370E+37   6.850E+42
