@@ -1091,7 +1091,8 @@ float float float ... float
                                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                                 print(' expecting NBANDS+1={:d} columns'.format(ncols))
                                 sys.exit(read_mags.__doc__)
-                            isfinite = [np.isfinite(float(line.split()[ii])) for ii in range(ncols)]
+                            # NaN is acceptable as a null value in magnitude files
+                            isfinite = [np.isfinite(float(line.split()[ii])) or np.isnan(float(line.split()[ii])) for ii in range(ncols)]
                             if False in isfinite:
                                 print('ERROR - non-finite numerical values (line {:d})'.format(iline))
                                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
@@ -1319,7 +1320,7 @@ if __name__ == '__main__':
                 ax.set_ylim(args.yr)
             for iy, yvar in enumerate(yy):
                 # exclude NULL values
-                idx = np.where(yvar != 1e-99)[0]
+                idx = np.where((yvar != 1e-99) & (~np.isnan(yvar)))[0]
                 if not log:
                     ax.plot(xx[idx], yvar[idx], label=label[iy])
                 else:
