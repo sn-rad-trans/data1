@@ -564,6 +564,7 @@ def read_ionfrac(file, checkformat=False):
     '''
 ionfrac_<element>_<model>_<code>.txt file format:
 
+#<optional comment lines>
 #NTIMES: int
 #NSTAGES: int
 #TIMES[d]: float float ... float
@@ -596,7 +597,6 @@ etc.
         if checkformat:
             okhdr = 0
             iline = 0
-            ncols = 5
             while okhdr == 0:
                 line = f.readline()
                 iline += 1
