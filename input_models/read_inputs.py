@@ -294,27 +294,27 @@ if __name__ == '__main__':
     plt.rc('legend', fontsize='medium')
 
     fig = plt.figure(figsize=(3.32, 2.25))
-    fig.subplots_adjust(left=.18, bottom=.19, right=.975, top=.99)
+    fig.subplots_adjust(left=.16, bottom=.17, right=.975, top=.99)
     ax = fig.add_subplot(111)
 
     # axis parameters
-    ax.set_xlim(0, 45)
+    ax.set_xlim(0, 4.2e4)
     ax.set_ylim(-16, -7.5)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(base=0.5))
-    ax.set_xlabel(r'Velocity [10$^3$ km s$^{-1}$]')
+    ax.set_xlabel(r'Velocity [km s$^{-1}$]')
     ax.set_ylabel(r'$\log_{10}$ Density [g cm$^{-3}$]')
 
     # plot
     colorcycle = ['#4477AA', '#CC6677', '#DDCC77', '#117733']
-    ax.plot(toy06['vel']/1e3, np.log10(toy06['dens'] * toy06_densscl), color=colorcycle[0], ls='-' , lw=1.0, label='toy06', zorder=10)
-    ax.plot(toy01['vel']/1e3, np.log10(toy01['dens'] * toy01_densscl), color=colorcycle[1], ls=':' , lw=2.0, label='toy01', zorder=10)
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['dens'] * ddc10_densscl), color=colorcycle[2], ls='-' , lw=2.0, label='DDC10', zorder=1)
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['dens'] * ddc25_densscl), color=colorcycle[3], ls=':', lw=1.0, label='DDC25', zorder=1)
+    ax.plot(toy06['vel'], np.log10(toy06['dens'] * toy06_densscl), color=colorcycle[0], ls='-' , lw=1.0, label='toy06', zorder=10)
+    ax.plot(toy01['vel'], np.log10(toy01['dens'] * toy01_densscl), color=colorcycle[1], ls=':' , lw=2.0, label='toy01', zorder=10)
+    ax.plot(ddc10['vel'], np.log10(ddc10['dens'] * ddc10_densscl), color=colorcycle[2], ls='-' , lw=2.0, label='DDC10', zorder=1)
+    ax.plot(ddc25['vel'], np.log10(ddc25['dens'] * ddc25_densscl), color=colorcycle[3], ls=':', lw=1.0, label='DDC25', zorder=1)
 
     # legend and labels
-    ax.legend(frameon=False)
-    ax.text(.08, .1, '$t = 1$\,d', transform=ax.transAxes)
+    ax.legend(frameon=False, fontsize='small')
+    ax.text(.08, .1, '$t = {:d}$\,d'.format(int(tref)), transform=ax.transAxes)
     
     plt.savefig('density_profile.pdf')
     print('INFO - created output file density_profile.pdf')
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     #########################################
 
     # x- and y-lim
-    xlim = (0., 40)
+    xlim = (0., 4e4)
     ylim = (-5, .99)
     
     # color scheme
@@ -366,7 +366,7 @@ if __name__ == '__main__':
     plt.rc('legend', fontsize='medium')
 
     fig = plt.figure(figsize=(3.32, 2.62))
-    fig.subplots_adjust(left=.15, bottom=.19, right=.975, top=.85)
+    fig.subplots_adjust(left=.12, bottom=.15, right=.95, top=.87)
     ax = fig.add_subplot(111)
 
     # axis parameters
@@ -374,7 +374,7 @@ if __name__ == '__main__':
     ax.set_ylim(ylim)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(base=0.5))
-    ax.set_xlabel(r'Velocity [10$^3$ km s$^{-1}$]')
+    ax.set_xlabel(r'Velocity [km s$^{-1}$]')
     ax.set_ylabel(r'$\log_{10}$ Mass Fraction')
 
     # plot   
@@ -387,17 +387,17 @@ if __name__ == '__main__':
     idx = np.where(toy01['si'] == 0.)
     toy01['si'][idx] = 1e-99
     x_ime = toy01['ca'] + toy01['s'] + toy01['si'] 
-    ax.plot(toy01['vel']/1e3, np.log10(toy01['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
-    ax.plot(toy01['vel']/1e3, np.log10(toy01['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
-    ax.plot(toy01['vel']/1e3, np.log10(toy01['s']), color=col_s, ls='-' , lw=1.0, label='S')
-    ax.plot(toy01['vel']/1e3, np.log10(toy01['si']), color=col_si, ls='-' , lw=1.0, label='Si')
-    lime, = ax.plot(toy01['vel']/1e3, np.log10(x_ime), color=col_ime, ls=ls_ime, lw=1.0, label='')
+    ax.plot(toy01['vel'], np.log10(toy01['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
+    ax.plot(toy01['vel'], np.log10(toy01['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
+    ax.plot(toy01['vel'], np.log10(toy01['s']), color=col_s, ls='-' , lw=1.0, label='S')
+    ax.plot(toy01['vel'], np.log10(toy01['si']), color=col_si, ls='-' , lw=1.0, label='Si')
+    lime, = ax.plot(toy01['vel'], np.log10(x_ime), color=col_ime, ls=ls_ime, lw=1.0, label='')
 
     # upper X-axis (Lagrangian mass)
     mlagrangian = toy01['mass']
     massvals = [.2, .5, .8, .95, .99]
     xticklabels = [str(m) for m in massvals]
-    f = interpolate.interp1d(mlagrangian, toy01['vel']/1e3)
+    f = interpolate.interp1d(mlagrangian, toy01['vel'])
     v = f(massvals) # returns interpolated velocity locations of mass coordinates
     ax2 = ax.twiny()
     ax2.minorticks_off()
@@ -435,7 +435,7 @@ if __name__ == '__main__':
     plt.rc('legend', fontsize='medium')
 
     fig = plt.figure(figsize=(3.32, 2.62))
-    fig.subplots_adjust(left=.15, bottom=.19, right=.975, top=.85)
+    fig.subplots_adjust(left=.12, bottom=.15, right=.95, top=.87)
     ax = fig.add_subplot(111)
 
     # axis parameters
@@ -443,7 +443,7 @@ if __name__ == '__main__':
     ax.set_ylim(ylim)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(base=0.5))
-    ax.set_xlabel(r'Velocity [10$^3$ km s$^{-1}$]')
+    ax.set_xlabel(r'Velocity [km s$^{-1}$]')
     ax.set_ylabel(r'$\log_{10}$ Mass Fraction')
 
     # plot   
@@ -456,17 +456,17 @@ if __name__ == '__main__':
     idx = np.where(toy06['si'] == 0.)
     toy06['si'][idx] = 1e-99
     x_ime = toy06['ca'] + toy06['s'] + toy06['si'] 
-    ax.plot(toy06['vel']/1e3, np.log10(toy06['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
-    ax.plot(toy06['vel']/1e3, np.log10(toy06['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
-    ax.plot(toy06['vel']/1e3, np.log10(toy06['s']), color=col_s, ls='-' , lw=1.0, label='S')
-    ax.plot(toy06['vel']/1e3, np.log10(toy06['si']), color=col_si, ls='-' , lw=1.0, label='Si')
-    lime, = ax.plot(toy06['vel']/1e3, np.log10(x_ime), color=col_ime, ls=ls_ime, lw=1.0, label='')
+    ax.plot(toy06['vel'], np.log10(toy06['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
+    ax.plot(toy06['vel'], np.log10(toy06['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
+    ax.plot(toy06['vel'], np.log10(toy06['s']), color=col_s, ls='-' , lw=1.0, label='S')
+    ax.plot(toy06['vel'], np.log10(toy06['si']), color=col_si, ls='-' , lw=1.0, label='Si')
+    lime, = ax.plot(toy06['vel'], np.log10(x_ime), color=col_ime, ls=ls_ime, lw=1.0, label='')
 
     # upper X-axis (Lagrangian mass)
     mlagrangian = toy06['mass']
     massvals = [.2, .5, .8, .95, .99]
     xticklabels = [str(m) for m in massvals]
-    f = interpolate.interp1d(mlagrangian, toy06['vel']/1e3)
+    f = interpolate.interp1d(mlagrangian, toy06['vel'])
     v = f(massvals) # returns interpolated velocity locations of mass coordinates
     ax2 = ax.twiny()
     ax2.minorticks_off()
@@ -504,7 +504,7 @@ if __name__ == '__main__':
     plt.rc('legend', fontsize='medium')
 
     fig = plt.figure(figsize=(3.32, 2.62))
-    fig.subplots_adjust(left=.15, bottom=.19, right=.975, top=.85)
+    fig.subplots_adjust(left=.12, bottom=.15, right=.95, top=.87)
     ax = fig.add_subplot(111)
 
     # axis parameters
@@ -512,7 +512,7 @@ if __name__ == '__main__':
     ax.set_ylim(ylim)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(base=0.5))
-    ax.set_xlabel(r'Velocity [10$^3$ km s$^{-1}$]')
+    ax.set_xlabel(r'Velocity [km s$^{-1}$]')
     ax.set_ylabel(r'$\log_{10}$ Mass Fraction')
 
     # plot
@@ -526,21 +526,21 @@ if __name__ == '__main__':
     for ime in imes:
         x_ime += ddc10[ime]
     
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['fe']), color=col_fe, ls='-' , lw=1.0, label='Fe')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['s']), color=col_s, ls='-' , lw=1.0, label='S')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['si']), color=col_si, ls='-' , lw=1.0, label='Si')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['o']), color=col_o, ls='-' , lw=1.0, label='O')
-    ax.plot(ddc10['vel']/1e3, np.log10(ddc10['c']), color=col_c, ls='-' , lw=1.0, label='C')
-    lige, = ax.plot(ddc10['vel']/1e3, np.log10(x_ige), color=col_ige, ls=ls_ige , lw=1.0, label='')
-    lime, = ax.plot(ddc10['vel']/1e3, np.log10(x_ime), color=col_ime, ls=ls_ime , lw=1.0, label='')
+    ax.plot(ddc10['vel'], np.log10(ddc10['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
+    ax.plot(ddc10['vel'], np.log10(ddc10['fe']), color=col_fe, ls='-' , lw=1.0, label='Fe')
+    ax.plot(ddc10['vel'], np.log10(ddc10['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
+    ax.plot(ddc10['vel'], np.log10(ddc10['s']), color=col_s, ls='-' , lw=1.0, label='S')
+    ax.plot(ddc10['vel'], np.log10(ddc10['si']), color=col_si, ls='-' , lw=1.0, label='Si')
+    ax.plot(ddc10['vel'], np.log10(ddc10['o']), color=col_o, ls='-' , lw=1.0, label='O')
+    ax.plot(ddc10['vel'], np.log10(ddc10['c']), color=col_c, ls='-' , lw=1.0, label='C')
+    lige, = ax.plot(ddc10['vel'], np.log10(x_ige), color=col_ige, ls=ls_ige , lw=1.0, label='')
+    lime, = ax.plot(ddc10['vel'], np.log10(x_ime), color=col_ime, ls=ls_ime , lw=1.0, label='')
 
     # upper X-axis (Lagrangian mass)
     mlagrangian = np.cumsum(ddc10['dmass']) / MSUN
     massvals = [.2, .5, .9, 1.2, 1.38]
     xticklabels = [str(m) for m in massvals]
-    f = interpolate.interp1d(mlagrangian, ddc10['vel']/1e3)
+    f = interpolate.interp1d(mlagrangian, ddc10['vel'])
     v = f(massvals) # returns interpolated velocity locations of mass coordinates
     ax2 = ax.twiny()
     ax2.minorticks_off()
@@ -578,7 +578,7 @@ if __name__ == '__main__':
     plt.rc('legend', fontsize='medium')
 
     fig = plt.figure(figsize=(3.32, 2.62))
-    fig.subplots_adjust(left=.15, bottom=.19, right=.975, top=.85)
+    fig.subplots_adjust(left=.12, bottom=.15, right=.95, top=.87)
     ax = fig.add_subplot(111)
 
     # axis parameters
@@ -586,7 +586,7 @@ if __name__ == '__main__':
     ax.set_ylim(ylim)
     ax.yaxis.set_major_locator(ticker.MultipleLocator(base=1))
     ax.yaxis.set_minor_locator(ticker.MultipleLocator(base=0.5))
-    ax.set_xlabel(r'Velocity [10$^3$ km s$^{-1}$]')
+    ax.set_xlabel(r'Velocity [km s$^{-1}$]')
     ax.set_ylabel(r'$\log_{10}$ Mass Fraction')
 
     # plot   
@@ -600,21 +600,21 @@ if __name__ == '__main__':
     for ime in imes:
         x_ime += ddc25[ime]
         
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['fe']), color=col_fe, ls='-' , lw=1.0, label='Fe')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['s']), color=col_s, ls='-' , lw=1.0, label='S')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['si']), color=col_si, ls='-' , lw=1.0, label='Si')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['o']), color=col_o, ls='-' , lw=1.0, label='O')
-    ax.plot(ddc25['vel']/1e3, np.log10(ddc25['c']), color=col_c, ls='-' , lw=1.0, label='C')
-    lige, = ax.plot(ddc25['vel']/1e3, np.log10(x_ige), color=col_ige, ls=ls_ige , lw=1.0, label='')
-    lime, = ax.plot(ddc25['vel']/1e3, np.log10(x_ime), color=col_ime, ls=ls_ime , lw=1.0, label='')
+    ax.plot(ddc25['vel'], np.log10(ddc25['ni56_0']), color=col_ni56, ls='-' , lw=1.0, label='$^{56}$Ni$_0$')
+    ax.plot(ddc25['vel'], np.log10(ddc25['fe']), color=col_fe, ls='-' , lw=1.0, label='Fe')
+    ax.plot(ddc25['vel'], np.log10(ddc25['ca']), color=col_ca, ls='-' , lw=1.0, label='Ca')
+    ax.plot(ddc25['vel'], np.log10(ddc25['s']), color=col_s, ls='-' , lw=1.0, label='S')
+    ax.plot(ddc25['vel'], np.log10(ddc25['si']), color=col_si, ls='-' , lw=1.0, label='Si')
+    ax.plot(ddc25['vel'], np.log10(ddc25['o']), color=col_o, ls='-' , lw=1.0, label='O')
+    ax.plot(ddc25['vel'], np.log10(ddc25['c']), color=col_c, ls='-' , lw=1.0, label='C')
+    lige, = ax.plot(ddc25['vel'], np.log10(x_ige), color=col_ige, ls=ls_ige , lw=1.0, label='')
+    lime, = ax.plot(ddc25['vel'], np.log10(x_ime), color=col_ime, ls=ls_ime , lw=1.0, label='')
 
     # upper X-axis (Lagrangian mass)
     mlagrangian = np.cumsum(ddc25['dmass']) / MSUN
     massvals = [.2, .5, .9, 1.2, 1.38]
     xticklabels = [str(m) for m in massvals]
-    f = interpolate.interp1d(mlagrangian, ddc25['vel']/1e3)
+    f = interpolate.interp1d(mlagrangian, ddc25['vel'])
     v = f(massvals) # returns interpolated velocity locations of mass coordinates
     ax2 = ax.twiny()
     ax2.minorticks_off()
