@@ -123,6 +123,12 @@ etc.
     ### read numerical data
     t, lbol, edep = np.loadtxt(file, comments='#', unpack=True)
                         
+    # check values
+    if np.unique(t).size != t.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_lbol_edep.__doc__)
+
     # output
     out = {}
     out['time'] = t
@@ -282,12 +288,20 @@ etc.
         edeparr[it,:] = vals[:,it+1]
 
     # check values
-    if velarr.max() > 3e5:
+    if np.unique(tarr).size != tarr.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_edep.__doc__)
+    elif np.unique(velarr).size != velarr.size:
+        print('ERROR - duplicate entries in velocity array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_edep.__doc__)
+    elif velarr.max() > 3e5:
         print('ERROR - maximum velocity exceeds speed of light (km/s)!')
         print(' max(vel)= {:.5e} km/s'.format(velarr.max()))
         print(' ===> velocity expected in km/s (not cm/s)')
         sys.exit(read_edep.__doc__)
-        
+
     # output
     out = {}
     out['time'] = tarr
@@ -414,7 +428,7 @@ etc.
                             print('ERROR - conflicting header line (line {:d})'.format(iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' expecting "#NVEL: int"')
-                            sys.exit(read_edep.__doc__)
+                            sys.exit(read_phys.__doc__)
                         else:
                             try:
                                 nv = int(line.split()[1])
@@ -422,7 +436,7 @@ etc.
                                 print('ERROR - conflicting header line (line {:d})'.format(iline))
                                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                                 print(' expecting "#NVEL: int"')
-                                sys.exit(read_edep.__doc__)
+                                sys.exit(read_phys.__doc__)
                         line = f.readline()
                         iline += 1
                         if ' '.join(line.split()) != '#vel_mid[km/s] temp[K] rho[gcc] ne[/cm^3] natom[/cm^3]':
@@ -473,7 +487,7 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
-                sys.exit(read_edep.__doc__)
+                sys.exit(read_phys.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
                 okfmt = 1
@@ -496,6 +510,12 @@ etc.
                     tarrstr = split_line[1:]
                     tarr = [float(tt) for tt in tarrstr]
                     okhdr = 1
+
+    # check values
+    if np.unique(tarr).size != tarr.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_phys.__doc__)                    
                     
     # re-open file to read in numerical values
     # not ideal, but would otherwise need to keep track of NVEL at each time
@@ -532,12 +552,16 @@ etc.
                 natomtmp[iv] = float(split_line[4])
 
             # check values
-            if veltmp.max() > 3e5:
+            if np.unique(veltmp).size != veltmp.size:
+                print('ERROR - duplicate entries in time array')
+                print(' ===> check number of significant digits')
+                sys.exit(read_phys.__doc__)
+            elif veltmp.max() > 3e5:
                 print('ERROR - maximum velocity exceeds speed of light (km/s)!')
                 print(' max(vel)= {:.5e} km/s'.format(veltmp.max()))
                 print(' ===> velocity expected in km/s (not cm/s)')
                 sys.exit(read_phys.__doc__)
-                
+
             # append to lists
             vel.append(veltmp)
             temp.append(temptmp)
@@ -698,7 +722,7 @@ etc.
                             print('ERROR - conflicting header line (line {:d})'.format(iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' expecting "#NVEL: int"')
-                            sys.exit(read_edep.__doc__)
+                            sys.exit(read_ionfrac.__doc__)
                         else:
                             try:
                                 nv = int(line.split()[1])
@@ -706,7 +730,7 @@ etc.
                                 print('ERROR - conflicting header line (line {:d})'.format(iline))
                                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                                 print(' expecting "#NVEL: int"')
-                                sys.exit(read_edep.__doc__)
+                                sys.exit(read_ionfrac.__doc__)
                         line = f.readline()
                         iline += 1
                         if ' '.join(line.split()) != '#vel_mid[km/s] ' + ' '.join([elem+str(ii) for ii in np.arange(nstages)]):
@@ -757,7 +781,7 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
-                sys.exit(read_edep.__doc__)
+                sys.exit(read_ionfrac.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
                 okfmt = 1
@@ -783,6 +807,12 @@ etc.
                     tarr = [float(tt) for tt in tarrstr]
                     okhdr = 1
 
+    # check values
+    if np.unique(tarr).size != tarr.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_ionfrac.__doc__)
+                    
     # re-open file to read in numerical values
     # not ideal, but would otherwise need to keep track of NVEL at each time
     with open(file, 'r') as f:
@@ -819,7 +849,11 @@ etc.
                     sys.exit(read_ionfrac.__doc__)
 
             # check values
-            if veltmp.max() > 3e5:
+            if np.unique(veltmp).size != veltmp.size:
+                print('ERROR - duplicate entries in time array')
+                print(' ===> check number of significant digits')
+                sys.exit(read_ionfrac.__doc__)
+            elif veltmp.max() > 3e5:
                 print('ERROR - maximum velocity exceeds speed of light (km/s)!')
                 print(' max(vel)= {:.5e} km/s'.format(veltmp.max()))
                 print(' ===> velocity expected in km/s (not cm/s)')
@@ -994,7 +1028,22 @@ etc.
     farr = np.zeros((nt,nw))
     for it in range(nt):
         farr[it,:] = vals[:,it+1]
-                        
+
+    # check values
+    if np.unique(tarr).size != tarr.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_spectra.__doc__)
+    elif np.unique(warr).size != warr.size:
+        print('ERROR - duplicate entries in wavelength array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_spectra.__doc__)
+    elif warr.max() < 1e3:
+        print('ERROR - maximum wavelength < 1000 Angstroms')
+        print(' max(wave)= {:.5e} Angstroms'.format(warr.max()))
+        print(' ===> wavelength expected in Angstroms (not, e.g., cm)')
+        sys.exit(read_spectra.__doc__)
+        
     # output
     out = {}
     out['time'] = np.array(tarr)
@@ -1133,6 +1182,12 @@ float float float ... float
     for ib, b in enumerate(bands):
         mag[b] = vals[:,ib+1]
                         
+    # check values
+    if np.unique(time).size != time.size:
+        print('ERROR - duplicate entries in time array')
+        print(' ===> check number of significant digits')
+        sys.exit(read_mags.__doc__)
+        
     # output
     out = {}
     out['time'] = time
