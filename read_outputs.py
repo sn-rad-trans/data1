@@ -104,6 +104,8 @@ etc.
                             print('ERROR - lines remaining after NTIMES={:d} lines read (line {:d})'.format(nt, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NTIMES={:d} value in header'.format(nt))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_lbol_edep.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -258,6 +260,8 @@ etc.
                             print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NVEL={:d} value in header'.format(nv))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_edep.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -487,6 +491,8 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
+                if len(line.rstrip()) == 0:
+                    print(' ===> check for empty lines!')
                 sys.exit(read_phys.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
@@ -781,6 +787,8 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
+                if len(line.rstrip()) == 0:
+                    print(' ===> check for empty lines!')
                 sys.exit(read_ionfrac.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
@@ -841,7 +849,7 @@ etc.
                 ionfractmp[iv,:] = [float(x) for x in split_line[1:]]
                 sumionfrac = np.sum(ionfractmp[iv,:])
                 # need to check sumionfrac > 1e-20 to ensure element is actually present at this velocity
-                if np.abs(sumionfrac - 1.0) > 1e-3 and sumionfrac > 1e-20:
+                if np.abs(sumionfrac - 1.0) > 2e-3 and sumionfrac > 1e-20:
                     print('ERROR - sum of ionization fractions should be equal to one!')
                     print(' TIME= {:s} d'.format(str(tarr[it])))
                     print(' vel_mid= {:s} km/s'.format(str(veltmp[iv])))
@@ -1000,6 +1008,8 @@ etc.
                             print('ERROR - lines remaining after NWAVE={:d} lines read (line {:d})'.format(nw, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NWAVE={:d} value in header'.format(nw))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_spectra.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -1154,6 +1164,8 @@ float float float ... float
                             print('ERROR - lines remaining after NTIMES={:d} lines read (line {:d})'.format(nt, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NTIMES={:d} value in header'.format(nt))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_mags.__doc__)
                         else:
                             print('INFO - format check OK!')
