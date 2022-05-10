@@ -127,7 +127,8 @@ etc.
                         
     # check values
     if np.unique(t).size != t.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(t, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_lbol_edep.__doc__)
 
@@ -293,11 +294,13 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_edep.__doc__)
     elif np.unique(velarr).size != velarr.size:
-        print('ERROR - duplicate entries in velocity array')
+        u, c = np.unique(velarr, return_counts=True)
+        print('ERROR - duplicate entries in velocity array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_edep.__doc__)
     elif velarr.max() > 3e5:
@@ -519,7 +522,8 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_phys.__doc__)                    
                     
@@ -559,7 +563,8 @@ etc.
 
             # check values
             if np.unique(veltmp).size != veltmp.size:
-                print('ERROR - duplicate entries in time array')
+                u, c = np.unique(veltmp, return_counts=True)
+                print('ERROR - duplicate entries in velocity array:', u[c > 1])
                 print(' ===> check number of significant digits')
                 sys.exit(read_phys.__doc__)
             elif veltmp.max() > 3e5:
@@ -817,7 +822,8 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_ionfrac.__doc__)
                     
@@ -858,7 +864,8 @@ etc.
 
             # check values
             if np.unique(veltmp).size != veltmp.size:
-                print('ERROR - duplicate entries in time array')
+                u, c = np.unique(veltmp, return_counts=True)
+                print('ERROR - duplicate entries in velocity array:', u[c > 1])
                 print(' ===> check number of significant digits')
                 sys.exit(read_ionfrac.__doc__)
             elif veltmp.max() > 3e5:
@@ -1041,11 +1048,13 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_spectra.__doc__)
     elif np.unique(warr).size != warr.size:
-        print('ERROR - duplicate entries in wavelength array')
+        u, c = np.unique(warr, return_counts=True)
+        print('ERROR - duplicate entries in wavelength array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_spectra.__doc__)
     elif warr.max() < 1e3:
@@ -1196,7 +1205,8 @@ float float float ... float
                         
     # check values
     if np.unique(time).size != time.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(time, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_mags.__doc__)
         
