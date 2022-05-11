@@ -2,7 +2,7 @@
 #with vega calibration file: https://archive.stsci.edu/hlsps/reference-atlases/cdbs/calspec/alpha_lyr_stis_003.fits 
 #and with scipy 1D interpolation kind='cubic'.
 #U,B,V,R,I are Generic Bessell filters and J, H, K are 2MASS filters, taken from http://svo2.cab.inta-csic.es/theory/fps/index.php 
-#The spectra file used was last modified at: 2022-03-19 15:02:01 UTC
+#The spectra file used was last modified at: 2022-03-18 08:36:41 UTC
 #and had md5 hash: 6d8f37630e199710c55147e85f7e3a4f
 #
 #NTIMES: 642
