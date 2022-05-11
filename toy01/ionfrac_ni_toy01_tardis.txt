@@ -4,7 +4,7 @@
 #
 #TIME: 5.0
 #NVEL: 320
-#vel_mid[km/s] Ni0 Ni1 Ni2 Ni3 Ni4 Ni5 Ni6 Ni7
+#vel_mid[km/s] ni0 ni1 ni2 ni3 ni4 ni5 ni6 ni7
 1.902500E+04        
 1.907500E+04        
 1.912500E+04        
@@ -328,7 +328,7 @@
 #
 #TIME: 10.0
 #NVEL: 420
-#vel_mid[km/s] Ni0 Ni1 Ni2 Ni3 Ni4 Ni5 Ni6 Ni7
+#vel_mid[km/s] ni0 ni1 ni2 ni3 ni4 ni5 ni6 ni7
 1.402500E+04        
 1.407500E+04        
 1.412500E+04        
@@ -752,7 +752,7 @@
 #
 #TIME: 15.0
 #NVEL: 480
-#vel_mid[km/s] Ni0 Ni1 Ni2 Ni3 Ni4 Ni5 Ni6 Ni7
+#vel_mid[km/s] ni0 ni1 ni2 ni3 ni4 ni5 ni6 ni7
 1.102500E+04        
 1.107500E+04        
 1.112500E+04        
@@ -1236,7 +1236,7 @@
 #
 #TIME: 20.0
 #NVEL: 520
-#vel_mid[km/s] Ni0 Ni1 Ni2 Ni3 Ni4 Ni5 Ni6 Ni7
+#vel_mid[km/s] ni0 ni1 ni2 ni3 ni4 ni5 ni6 ni7
 9.025000E+03        
 9.075000E+03        
 9.125000E+03        

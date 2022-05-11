@@ -104,6 +104,8 @@ etc.
                             print('ERROR - lines remaining after NTIMES={:d} lines read (line {:d})'.format(nt, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NTIMES={:d} value in header'.format(nt))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_lbol_edep.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -125,7 +127,8 @@ etc.
                         
     # check values
     if np.unique(t).size != t.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(t, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_lbol_edep.__doc__)
 
@@ -258,6 +261,8 @@ etc.
                             print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NVEL={:d} value in header'.format(nv))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_edep.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -289,11 +294,13 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_edep.__doc__)
     elif np.unique(velarr).size != velarr.size:
-        print('ERROR - duplicate entries in velocity array')
+        u, c = np.unique(velarr, return_counts=True)
+        print('ERROR - duplicate entries in velocity array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_edep.__doc__)
     elif velarr.max() > 3e5:
@@ -487,6 +494,8 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
+                if len(line.rstrip()) == 0:
+                    print(' ===> check for empty lines!')
                 sys.exit(read_phys.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
@@ -513,7 +522,8 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_phys.__doc__)                    
                     
@@ -553,7 +563,8 @@ etc.
 
             # check values
             if np.unique(veltmp).size != veltmp.size:
-                print('ERROR - duplicate entries in time array')
+                u, c = np.unique(veltmp, return_counts=True)
+                print('ERROR - duplicate entries in velocity array:', u[c > 1])
                 print(' ===> check number of significant digits')
                 sys.exit(read_phys.__doc__)
             elif veltmp.max() > 3e5:
@@ -781,6 +792,8 @@ etc.
                 print('ERROR - lines remaining after NVEL={:d} lines read (line {:d})'.format(nv, iline))
                 print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                 print(' ===> also check NVEL={:d} value in intermediate header'.format(nv))
+                if len(line.rstrip()) == 0:
+                    print(' ===> check for empty lines!')
                 sys.exit(read_ionfrac.__doc__)
             elif okfmt == nt:
                 print('INFO - format check OK!')
@@ -809,7 +822,8 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_ionfrac.__doc__)
                     
@@ -841,7 +855,7 @@ etc.
                 ionfractmp[iv,:] = [float(x) for x in split_line[1:]]
                 sumionfrac = np.sum(ionfractmp[iv,:])
                 # need to check sumionfrac > 1e-20 to ensure element is actually present at this velocity
-                if np.abs(sumionfrac - 1.0) > 1e-3 and sumionfrac > 1e-20:
+                if np.abs(sumionfrac - 1.0) > 2e-3 and sumionfrac > 1e-20:
                     print('ERROR - sum of ionization fractions should be equal to one!')
                     print(' TIME= {:s} d'.format(str(tarr[it])))
                     print(' vel_mid= {:s} km/s'.format(str(veltmp[iv])))
@@ -850,7 +864,8 @@ etc.
 
             # check values
             if np.unique(veltmp).size != veltmp.size:
-                print('ERROR - duplicate entries in time array')
+                u, c = np.unique(veltmp, return_counts=True)
+                print('ERROR - duplicate entries in velocity array:', u[c > 1])
                 print(' ===> check number of significant digits')
                 sys.exit(read_ionfrac.__doc__)
             elif veltmp.max() > 3e5:
@@ -1000,6 +1015,8 @@ etc.
                             print('ERROR - lines remaining after NWAVE={:d} lines read (line {:d})'.format(nw, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NWAVE={:d} value in header'.format(nw))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_spectra.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -1031,11 +1048,13 @@ etc.
 
     # check values
     if np.unique(tarr).size != tarr.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(tarr, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_spectra.__doc__)
     elif np.unique(warr).size != warr.size:
-        print('ERROR - duplicate entries in wavelength array')
+        u, c = np.unique(warr, return_counts=True)
+        print('ERROR - duplicate entries in wavelength array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_spectra.__doc__)
     elif warr.max() < 1e3:
@@ -1154,6 +1173,8 @@ float float float ... float
                             print('ERROR - lines remaining after NTIMES={:d} lines read (line {:d})'.format(nt, iline))
                             print(' line {:d}: "{:s}"'.format(iline, line.rstrip()))
                             print(' ===> check NTIMES={:d} value in header'.format(nt))
+                            if len(line.rstrip()) == 0:
+                                print(' ===> check for empty lines!')
                             sys.exit(read_mags.__doc__)
                         else:
                             print('INFO - format check OK!')
@@ -1184,7 +1205,8 @@ float float float ... float
                         
     # check values
     if np.unique(time).size != time.size:
-        print('ERROR - duplicate entries in time array')
+        u, c = np.unique(time, return_counts=True)
+        print('ERROR - duplicate entries in time array:', u[c > 1])
         print(' ===> check number of significant digits')
         sys.exit(read_mags.__doc__)
         
