@@ -517,7 +517,7 @@ etc.
                 elif 'TIMES' in line:
                     split_line = line.split()
                     tarrstr = split_line[1:]
-                    tarr = [float(tt) for tt in tarrstr]
+                    tarr = np.array([float(tt) for tt in tarrstr])
                     okhdr = 1
 
     # check values
@@ -817,7 +817,7 @@ etc.
                 elif 'TIMES' in line:
                     split_line = line.split()
                     tarrstr = split_line[1:]
-                    tarr = [float(tt) for tt in tarrstr]
+                    tarr = np.array([float(tt) for tt in tarrstr])
                     okhdr = 1
 
     # check values
@@ -1036,7 +1036,7 @@ etc.
                 elif 'TIMES' in line:
                     split_line = line.split()
                     tarrstr = split_line[1:]
-                    tarr = [float(tt) for tt in tarrstr]
+                    tarr = np.array([float(tt) for tt in tarrstr])
                     okhdr = 1
 
     ### read numerical data
