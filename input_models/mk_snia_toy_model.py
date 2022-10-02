@@ -156,6 +156,9 @@ Revision history
               o limit choices of IMEs to list of allowed IMEs (IME_ALLOWED)
               o added notes on mass fractions in output file
 
+02 Oct 2022 - revised version (SB)
+              o increased precision of various reported values on screen and in file (e.g., time .2f -> .4e)
+
 Author contact
 --------------
 Stéphane Blondin, stephane.blondin@lam.fr
@@ -167,7 +170,7 @@ import re
 import numpy as np
 
 ### version number
-VERSION = '2022-03-07'
+VERSION = '2022-10-02'
 
 ### ensure Python2 (2.6 or 2.7) and Python3 compatibility
 if sys.version_info.major == 2:
@@ -416,11 +419,11 @@ if __name__ == '__main__':
         mige = 0.0
     mburnt = mige + mni56 + mime
     if mburnt > mtot:
-        sys.exit("ERROR - burnt mass exceeds total mass! mtot, mburnt = {:.3f}, {:.3f} Msun".format(mtot, mburnt))
+        sys.exit("ERROR - burnt mass exceeds total mass! mtot, mburnt = {:.4e}, {:.4e} Msun".format(mtot, mburnt))
     elif mni56 < EPSILON:
-        sys.exit("ERROR - 56Ni mass must be > 0! mni56 = {:.3f} Msun".format(mni56))
+        sys.exit("ERROR - 56Ni mass must be > 0! mni56 = {:.4e} Msun".format(mni56))
     elif mime < EPSILON:
-        sys.exit("ERROR - IME mass must be > 0! mime = {:.3f} Msun".format(mime))
+        sys.exit("ERROR - IME mass must be > 0! mime = {:.4e} Msun".format(mime))
     else:
         munbco = mtot - mburnt # unburnt mass
         
@@ -441,7 +444,7 @@ if __name__ == '__main__':
         xfracime = [float(xx) for xx in xfracimestr]
     xfracimetot = sum(xfracime)
     if np.abs(1.0 - 1.0/xfracimetot) > EPSILON:
-        sys.exit("ERROR - relative IME mass fractions don't sum up to 1! sum(xfracime) = {:.5f}".format(xfracimetot))
+        sys.exit("ERROR - relative IME mass fractions don't sum up to 1! sum(xfracime) = {:.5e}".format(xfracimetot))
 
     #
     # check Ti fraction
@@ -458,11 +461,11 @@ if __name__ == '__main__':
     print('INFO - user-defined ejecta mass and composition:')
     print('')
     print('            Mtot = {:.4e} Msun'.format(mtot))
-    print('   M(stable IGE) = {:.4e} Msun of which {:.1f}% Fe and {:.1f}% Ni'.format(mige, (1.0-args.xfracni)*1e2, args.xfracni*1e2))
+    print('   M(stable IGE) = {:.4e} Msun of which {:.2f}% Fe and {:.2f}% Ni'.format(mige, (1.0-args.xfracni)*1e2, args.xfracni*1e2))
     print('         M(56Ni) = {:.4e} Msun'.format(mni56))
     sys.stdout.write('          M(IME) = {:.4e} Msun of which'.format(mime))
     for ii, ime in enumerate(imes):
-        sys.stdout.write(' {:.1f}% {:s}'.format(xfracime[ii]*1e2, ime.capitalize()))
+        sys.stdout.write(' {:.2f}% {:s}'.format(xfracime[ii]*1e2, ime.capitalize()))
         if ii == nime-1:
             print('')
         else:
@@ -470,7 +473,7 @@ if __name__ == '__main__':
                 sys.stdout.write(' and')
             else:
                 sys.stdout.write(',')
-    print('  M(unburnt C/O) = {:.4e} Msun of which {:.1f}% C and {:.1f}% O'.format(munbco, (1.0-args.xfraco)*1e2, args.xfraco*1e2))
+    print('  M(unburnt C/O) = {:.4e} Msun of which {:.2f}% C and {:.2f}% O'.format(munbco, (1.0-args.xfraco)*1e2, args.xfraco*1e2))
 
     if (xfracti > 0.0):
         print('')
@@ -498,20 +501,20 @@ if __name__ == '__main__':
 
     # requirements on IGE/56Ni/IME/CO mass given mass intervals
     if mige < 0.5*dmige:
-        sys.exit("ERROR - Need to increase IGE mass or decrease dM(IGE) as M(IGE) < dM(IGE)/2! mime, dmige = {:.3f}, {:.3f} Msun".format(mige, dmige))
+        sys.exit("ERROR - Need to increase IGE mass or decrease dM(IGE) as M(IGE) < dM(IGE)/2! mime, dmige = {:.4e}, {:.4e} Msun".format(mige, dmige))
     if mni56 < 0.5*(dmige+dmni56):
-        sys.exit("ERROR - Need to increase 56Ni mass or decrease dM(IGE)+dM(56Ni) as M(56Ni) < [dM(IGE)+dM(56Ni)]/2! mni56, dmige, dmni56 = {:.3f}, {:.3f}, {:.3f} Msun".format(mni56, dmige, dmni56))
+        sys.exit("ERROR - Need to increase 56Ni mass or decrease dM(IGE)+dM(56Ni) as M(56Ni) < [dM(IGE)+dM(56Ni)]/2! mni56, dmige, dmni56 = {:.4e}, {:.4e}, {:.4e} Msun".format(mni56, dmige, dmni56))
     if mime < 0.5*(dmni56+dmime):
-        sys.exit("ERROR - Need to increase 56Ni mass or decrease dM(56Ni)+dM(IME) as M(56Ni) < [dM(56Ni)+dM(IME)]/2! mime, dmni56, dmime = {:.3f}, {:.3f}, {:.3f} Msun".format(mime, dmni56, dmime))
+        sys.exit("ERROR - Need to increase 56Ni mass or decrease dM(56Ni)+dM(IME) as M(56Ni) < [dM(56Ni)+dM(IME)]/2! mime, dmni56, dmime = {:.4e}, {:.4e}, {:.4e} Msun".format(mime, dmni56, dmime))
     if munbco < 0.5*dmime:
-        sys.exit("ERROR - Need to increase unburnt C/O mass or decrease dM(IME) as M(C/O) < dM(IME)/2! munbco, dmime = {:.3f}, {:.3f} Msun".format(munbco, dmime))
+        sys.exit("ERROR - Need to increase unburnt C/O mass or decrease dM(IME) as M(C/O) < dM(IME)/2! munbco, dmime = {:.4e}, {:.4e} Msun".format(munbco, dmime))
 
     # compute mass coordinate at which mass fraction starts decreasing from 1
     mcoord_ige = mige - 0.5*dmige # IGE mass fraction starts decreasing from 1 at this mass coordinate (unless M(IGE)=0!)
     mcoord_ni56 = mcoord_ige + mni56 + 0.5*(dmige-dmni56) # 56Ni mass fraction starts decreasing from 1 at this mass coordinate
     mcoord_ime = mcoord_ni56 + mime + 0.5*(dmni56-dmime) # IME mass fraction starts decreasing from 1 at this mass coordinate
     if args.debug:
-        print('mcoord_ige, mcoord_ni56, mcoord_ime = {:.3f} {:.3f} {:.3f}'.format(mcoord_ige, mcoord_ni56, mcoord_ime))
+        print('mcoord_ige, mcoord_ni56, mcoord_ime = {:.4e} {:.4e} {:.4e}'.format(mcoord_ige, mcoord_ni56, mcoord_ime))
 
     #
     # compute Ekin based on W07, Eq. 1 if --ekinw07 is set
@@ -572,12 +575,12 @@ if __name__ == '__main__':
         # ve = sqrt(Ekin / 6Mtot) (units=cgs)
         ve_cgs = np.sqrt(ekin*1e51 / (6*mtot*MSUN))
         ve = ve_cgs * 1e-5 # cm/s -> km/s
-        print('       computed e-folding velocity based on J99 = {:.0f} km/s'.format(ve))
+        print('       computed e-folding velocity based on J99 = {:.4e} km/s'.format(ve))
 
         # compute central density at T_END (see J99, Eq. A7)
         # rho_c,0 = Mtot / (8 PI ve^3 t^3) (units=cgs)
         rhoc0 = mtot * MSUN / (8 * np.pi * ve_cgs**3 * tend_sec**3)
-        print('       computed central density based on J99 = {:.2e} gcc at {:.0f} d'.format(rhoc0, tend))
+        print('       computed central density based on J99 = {:.4e} gcc at {:.4e} d'.format(rhoc0, tend))
 
         # compute rho @ zone center (rhocen) and mean density over [v0,v1] (rhoave = M/V = Int(rho dV) / V)
         z0 = v0/ve
@@ -601,11 +604,11 @@ if __name__ == '__main__':
         fac = fac3 / fac5
         vt_cgs = np.sqrt(fac*2.0*ekin*1e51 / (mtot*MSUN))
         vt = vt_cgs * 1e-5 # cm/s -> km/s
-        print('       computed transition velocity based on K10 = {:.0f} km/s'.format(vt))
+        print('       computed transition velocity based on K10 = {:.4e} km/s'.format(vt))
 
         # compute central density at T_END
         rhoc0 = mtot*MSUN / (4 * np.pi * vt_cgs**3 * tend_sec**3) / fac3
-        print('       computed central density based on K10 = {:.2e} gcc at {:.0f} d'.format(rhoc0, tend))
+        print('       computed central density based on K10 = {:.4e} gcc at {:.4e} d'.format(rhoc0, tend))
 
         # compute rho @ zone center (rhocen) and mean density over [v0,v1] (rhoave = M/V = Int(rho dV) / V)
         rhocen = rhoc0 * (vcen/vt)**(-exp_delta)
@@ -763,11 +766,11 @@ if __name__ == '__main__':
     print('')
     print('            Mtot = {:.4e} Msun'.format(np.sum(dmass)))
     print('            Ekin = {:.4e} erg'.format(5e9 * np.sum(dmass*MSUN * vel**2))) # 5e9 = 0.5 * 1e10 i.e. 1/2 factor * (km/s->cm/s)^2
-    print('   M(stable IGE) = {:.4e} Msun of which {:.1f}% Fe and {:.1f}% Ni'.format(np.sum(dmass*xige), (1.0-args.xfracni)*1e2, args.xfracni*1e2))
+    print('   M(stable IGE) = {:.4e} Msun of which {:.2f}% Fe and {:.2f}% Ni'.format(np.sum(dmass*xige), (1.0-args.xfracni)*1e2, args.xfracni*1e2))
     print('     M(56Ni,t=0) = {:.4e} Msun'.format(np.sum(dmass*xni56)))
     sys.stdout.write('          M(IME) = {:.4e} Msun of which'.format(np.sum(dmass*xime)))
     for ii, ime in enumerate(imes):
-        sys.stdout.write(' {:.1f}% {:s}'.format(xfracime[ii]*1e2, ime.capitalize()))
+        sys.stdout.write(' {:.2f}% {:s}'.format(xfracime[ii]*1e2, ime.capitalize()))
         if ii == nime-1:
             print('')
         else:
@@ -775,14 +778,14 @@ if __name__ == '__main__':
                 sys.stdout.write(' and')
             else:
                 sys.stdout.write(',')
-    print('  M(unburnt C/O) = {:.4e} Msun of which {:.1f}% C and {:.1f}% O'.format(np.sum(dmass*xunbco), (1.0-args.xfraco)*1e2, args.xfraco*1e2))
+    print('  M(unburnt C/O) = {:.4e} Msun of which {:.2f}% C and {:.2f}% O'.format(np.sum(dmass*xunbco), (1.0-args.xfraco)*1e2, args.xfraco*1e2))
 
     if (xfracti > 0.0):
         print('')
         print('     NOTE: M(Ti) = {:.4e} Msun in 56Ni and IME zones'.format(np.sum(dmass*xti)))
 
     print('')
-    print('INFO - gamma-ray escape time is t0_gamma = {:.2f} days'.format(t0_gamma/DAY2SEC))
+    print('INFO - gamma-ray escape time is t0_gamma = {:.4e} days'.format(t0_gamma/DAY2SEC))
 
     #
     # account for 56Ni decay between t~0 and T_END
@@ -800,7 +803,7 @@ if __name__ == '__main__':
     xfe56 = xni56_old * (1.0-t1-t3) # assumes X(56Co)=X(56Fe from 56Ni decay)=0 at t=0
 
     print('')
-    print('INFO - accounted for 56Ni decay at t = {:.2f} d:'.format(tend))
+    print('INFO - accounted for 56Ni decay at t = {:.4e} d:'.format(tend))
     print('')
     print('         M(56Ni) = {:.4e} Msun'.format(np.sum(dmass*xni56)))
     print('         M(56Co) = {:.4e} Msun'.format(np.sum(dmass*xco56)))
@@ -885,7 +888,7 @@ if __name__ == '__main__':
     # compute temperate at T_END (days), assuming radiation-dominated gas, no diffusion, local deposition 
     #
     print('')
-    print('INFO - computing final temperature at t = {:.2f} d'.format(tend))
+    print('INFO - computing final temperature at t = {:.4e} d'.format(tend))
 
     tauni = 1.0 / decay_const_ni56
     tauco = 1.0 / decay_const_co56
@@ -934,7 +937,7 @@ if __name__ == '__main__':
 
     # display final abundances
     print('')
-    print('INFO - final elemental abundances at t = {:.2f} d'.format(tend))
+    print('INFO - final elemental abundances at t = {:.4e} d'.format(tend))
     print('')
     print('           M(Ni) = {:.4e} Msun'.format(np.sum(dmass*xni)))
     print('           M(Co) = {:.4e} Msun'.format(np.sum(dmass*xco)))
@@ -976,23 +979,23 @@ if __name__ == '__main__':
             f.write(' (with exponents (delta, n) = {:s})\n'.format(args.densexp))
         else:
             f.write('\n')
-        f.write('# time at which radius, temperature and abundances are calculated, tend = {:.2f} DAYS\n'.format(tend))
-        f.write('# M(stable IGE) = {:.4e} Msun ({:.4e} requested) with relative (Ni, Fe) fractions = {:.2f}, {:.2f}\n'.format(np.sum(dmass*xige), mige, args.xfracni, 1.0-args.xfracni))
+        f.write('# time at which radius, temperature and abundances are calculated, tend = {:.4e} DAYS\n'.format(tend))
+        f.write('# M(stable IGE) = {:.4e} Msun ({:.4e} requested) with relative (Ni, Fe) fractions = {:.4e}, {:.4e}\n'.format(np.sum(dmass*xige), mige, args.xfracni, 1.0-args.xfracni))
         f.write('# M(56Ni,t=0) = {:.4e} Msun ({:.4e} requested)\n'.format(np.sum(dmass*xni56_old), mni56))
         imestr = ', '.join([ii.capitalize() for ii in imes])
         xfracimestr = ', '.join(xfracimestr)
         f.write('# M(IME) = {:.4e} Msun ({:.4e} requested); IMEs = {:s} with relative fractions = {:s}\n'.format(np.sum(dmass*xime), mime, imestr, xfracimestr))
         if (xfracti > 0.0):
             f.write('# M(Ti) = {:.4e} Msun ({:.4e} requested) in 56Ni and IME zones\n'.format(np.sum(dmass*xti), mti))
-        f.write('# M(unburnt C/O) = {:.4e} Msun with relative (O, C) fractions = {:.2f}, {:.2f}\n'.format(np.sum(dmass*xunbco), args.xfraco, 1.0-args.xfraco))
-        f.write('# dM(IGE,56Ni,IME) = {:.2f}, {:.2f}, {:.2f} Msun'.format(dmige, dmni56, dmime))
+        f.write('# M(unburnt C/O) = {:.4e} Msun with relative (O, C) fractions = {:.4e}, {:.4e}\n'.format(np.sum(dmass*xunbco), args.xfraco, 1.0-args.xfraco))
+        f.write('# dM(IGE,56Ni,IME) = {:.4e}, {:.4e}, {:.4e} Msun'.format(dmige, dmni56, dmime))
         f.write('; transition profile = {:s}'.format(args.transprof))
         if args.transprof == 'invexpon':
-            f.write(' (with scale factor = {:.2e})\n'.format(args.transscl))
+            f.write(' (with scale factor = {:.4e})\n'.format(args.transscl))
         else:
             f.write('\n')
-        f.write('# 56Ni-weighted average column density={:.2e} g cm^-2 s^2'.format(Sig_tot_t2))
-        f.write('; t0_gamma={:.2f} day\n'.format(t0_gamma/DAY2SEC) )
+        f.write('# 56Ni-weighted average column density={:.4e} g cm^-2 s^2'.format(Sig_tot_t2))
+        f.write('; t0_gamma={:.4e} day\n'.format(t0_gamma/DAY2SEC) )
         f.write('#\n')
         f.write('# COLUMNS:\n')
         f.write('#\n')
@@ -1019,7 +1022,7 @@ if __name__ == '__main__':
         f.write('#\n')
         f.write('# NOTES ON MASS FRACTIONS:\n')
         f.write('#\n')
-        f.write('# !!! All mass fractions are given at tend = {:.2f} DAYS !!!\n'.format(tend))
+        f.write('# !!! All mass fractions are given at tend = {:.4e} DAYS !!!\n'.format(tend))
         f.write('# (apart from IGE & 56Ni mass fractions in columns (5) and (6) which are at t=0)\n')
         f.write('#\n')
         f.write('# (8) X_Ti only appears in this column (no duplicate entry in columns (13)-({:d}))\n'.format(nxfraccols))
@@ -1085,28 +1088,28 @@ if __name__ == '__main__':
         ax.set_xlabel('Velocity [10$^3$ km s$^{-1}$]')
         ax.set_ylabel('Log$_{10}$ Density [g cm$^{-3}$]')
         ax.set_xlim(0., vel.max()/1e3)
-        ax.plot(vel/1e3, np.log10(dens), marker='.', label='$t = {:.2f}$ day'.format(tend))
+        ax.plot(vel/1e3, np.log10(dens), marker='.', label='$t = {:.4e}$ day'.format(tend))
         ax.legend()
         
         ax = fig.add_subplot(322)
         ax.set_xlabel('Mass [M$_\odot$]')
         ax.set_ylabel('Log$_{10}$ Density [g cm$^{-3}$]')
         ax.set_xlim(0., mtot)
-        ax.plot(mass, np.log10(dens), marker='.', label='$t = {:.2f}$ day'.format(tend))
+        ax.plot(mass, np.log10(dens), marker='.', label='$t = {:.4e}$ day'.format(tend))
 
         # temperature profile
         ax = fig.add_subplot(323)
         ax.set_xlabel('Velocity [10$^3$ km s$^{-1}$]')
         ax.set_ylabel('Log$_{10}$ Temperature [K]')
         ax.set_xlim(0., vel.max()/1e3)
-        ax.plot(vel/1e3, np.log10(temp), marker='.', label='$t = {:.2f}$ day'.format(tend))
+        ax.plot(vel/1e3, np.log10(temp), marker='.', label='$t = {:.4e}$ day'.format(tend))
         ax.legend()
 
         ax = fig.add_subplot(324)
         ax.set_xlabel('Mass [M$_\odot$]')
         ax.set_ylabel('Log$_{10}$ Temperature [K]')
         ax.set_xlim(0., mtot)
-        ax.plot(mass, np.log10(temp), marker='.', label='$t = {:.2f}$ day'.format(tend))
+        ax.plot(mass, np.log10(temp), marker='.', label='$t = {:.4e}$ day'.format(tend))
             
         # abundance profiles - show grid points to check resolution
         ax = fig.add_subplot(325)
@@ -1169,7 +1172,7 @@ if __name__ == '__main__':
         ax.set_xlabel('Velocity [10$^3$ km s$^{-1}$]')
         ax.set_ylabel('Mass [M$_\odot$]')
         ax.set_xlim(0., vel.max()/1e3)
-        ax.plot(vel/1e3, mass, marker='.', label='$t = {:.2f}$ day'.format(tend))
+        ax.plot(vel/1e3, mass, marker='.', label='$t = {:.4e}$ day'.format(tend))
         ax.legend(loc='lower right')
                 
         plt.show()

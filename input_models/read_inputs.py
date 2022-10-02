@@ -225,10 +225,10 @@ if __name__ == '__main__':
     parser.add_argument('--path2data', default='.', type=str, help='path to directory containing the model files')
     args = parser.parse_args()
 
-    toy01 = read_snia_toy_model(args.path2data +'/' + 'snia_toy01.dat')
-    toy06 = read_snia_toy_model(args.path2data +'/' + 'snia_toy06.dat')
-    ddc10 = read_ddc_model(args.path2data +'/' + 'DDC10_0.976d')
-    ddc25 = read_ddc_model(args.path2data +'/' + 'DDC25_1.300d')
+    toy01 = read_snia_toy_model(args.path2data +'/' + 'snia_toy01_2d.dat')
+    toy06 = read_snia_toy_model(args.path2data +'/' + 'snia_toy06_2d.dat')
+    ddc10 = read_ddc_model(args.path2data +'/' + 'DDC10_0.976d.dat')
+    ddc25 = read_ddc_model(args.path2data +'/' + 'DDC25_1.300d.dat')
     model_dicts = {'toy01':toy01, 'toy06':toy06, 'DDC10':ddc10, 'DDC25':ddc25}
 
     
